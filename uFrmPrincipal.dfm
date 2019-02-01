@@ -113,9 +113,10 @@ object SIncronizador: TSIncronizador
       Top = 10
       Width = 100
       Height = 25
-      Caption = 'receber pedido'
+      Caption = 'estoque'
       TabOrder = 4
       Visible = False
+      OnClick = Button1Click
     end
   end
   object Panel2: TPanel
