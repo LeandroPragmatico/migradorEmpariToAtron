@@ -37,6 +37,10 @@ type
     procedure FormCreate(Sender: TObject);
     procedure Button2Click(Sender: TObject);
 
+    procedure produtoSimilares;
+    procedure clientes;
+    procedure Button4Click(Sender: TObject);
+
   private
     { Private declarations }
   public
@@ -77,13 +81,13 @@ begin
 //    ExecSQL;
 //  end;
 //
-//  with dm.qrCommonWeb do
-//  begin
-//    Close;
-//    sql.Clear;
-//    sql.Text:= 'delete from PUBLIC.categoria';
-//    ExecSQL;
-//  end;
+  with dm.qrCommonLoc do
+  begin
+    Close;
+    sql.Clear;
+    sql.Text:= 'delete from C000025';
+    ExecSQL;
+  end;
 
 log('produtos iniciadas');
 
@@ -92,10 +96,11 @@ log('produtos iniciadas');
     Close;
     sql.Clear;
     sql.Text:=
-    'INSERT INTO C000025 (CODIGO) '+
-    'VALUES (:CODIGO)';
-//    Open;
-//    First;
+    'INSERT INTO C000025 (CODIGO, PRODUTO, UNIDADE, REFERENCIA, CODBARRA, CODFORNECEDOR, PRECOCUSTO, SITUACAO,CFOP,CSOSN,CST, '+
+    'CLASSIFICACAO_FISCAL, CEST, CODIGO_ANP, CODMARCA, CODGRUPO, CODSUBGRUPO, TIPO, USA_BALANCA, USA_SERIAL,USA_GRADE  ) '+
+    'VALUES (:CODIGO, :PRODUTO, :UNIDADE, :REFERENCIA, :CODBARRA, :CODFORNECEDOR, :PRECOCUSTO, 0,''5102'',''102'',''000'', '+
+    ':CLASSIFICACAO_FISCAL, :CEST, :CODIGO_ANP, :CODMARCA, :CODGRUPO, :CODSUBGRUPO, ''VENDA'',2,0,0 )';
+
   end;
 
 
@@ -105,7 +110,9 @@ log('produtos iniciadas');
       Close;
       sql.Clear;
       sql.Text :=
-      'SELECT * FROM [hlpdados].[dbo].[produto]';
+      'SELECT TOP 20 [CODPROD], [DESCRICAO], [UNIDADE], [CODFAB],[CODBARRAS], [CODFOR], [CUSTO], '+
+      '[CODPRODCLASSIFICACAO], [CEST], [CODANP], [CODFABI], [CODGRUPO], [CODSUBGRUPO]  '+
+      ' FROM [hlpdados].[dbo].[produto]';
     Open;
     First;
 
@@ -123,19 +130,58 @@ log('produtos iniciadas');
       zerarcodigo(dm.qrCommonWeb.FieldByName('CODPROD').Value);
 //      ShowMessage( zerarcodigo(dm.qrCommonWeb.FieldByName('ID').Value));
 
-//   dm.qrCommonLoc.ParamByName('CODCLIENTE').Value :=
-//      zerarcodigo(dm.qrCommonWeb.FieldByName('CLIENTE_ID').Value);
+   dm.qrCommonLoc.ParamByName('PRODUTO').Value :=
+      (dm.qrCommonWeb.FieldByName('DESCRICAO').Value);
+
+   dm.qrCommonLoc.ParamByName('UNIDADE').Value :=
+      (dm.qrCommonWeb.FieldByName('UNIDADE').Value);
+
+
+//   dm.qrCommonLoc.ParamByName('REFERENCIA').Value :=
+//      (dm.qrCommonWeb.FieldByName('CODFAB').Value);
+
+
+   dm.qrCommonLoc.ParamByName('CODBARRA').Value :=
+      (dm.qrCommonWeb.FieldByName('CODBARRAS').Value);
+
+
+   dm.qrCommonLoc.ParamByName('CODFORNECEDOR').Value :=
+      zerarcodigo(dm.qrCommonWeb.FieldByName('CODFOR').Value);
+
+
+   dm.qrCommonLoc.ParamByName('PRECOCUSTO').Value :=
+      (dm.qrCommonWeb.FieldByName('CUSTO').Value);
+
+
+   dm.qrCommonLoc.ParamByName('CLASSIFICACAO_FISCAL').Value :=
+      (dm.qrCommonWeb.FieldByName('CODPRODCLASSIFICACAO').Value);
+
+
+   dm.qrCommonLoc.ParamByName('CEST').Value :=
+      (dm.qrCommonWeb.FieldByName('CEST').Value);
+
+
+   dm.qrCommonLoc.ParamByName('CODIGO_ANP').Value :=
+      (dm.qrCommonWeb.FieldByName('CODANP').Value);
 //
+
+   dm.qrCommonLoc.ParamByName('CODMARCA').Value :=
+      zerarcodigo(dm.qrCommonWeb.FieldByName('CODFABI').Value);
+
+
+   dm.qrCommonLoc.ParamByName('CODGRUPO').Value :=
+      zerarcodigo(dm.qrCommonWeb.FieldByName('CODGRUPO').Value);
+
 //
-//   dm.qrCommonLoc.ParamByName('DATA').Value :=
-//      (dm.qrCommonWeb.FieldByName('INSTANTE').Value);
+   dm.qrCommonLoc.ParamByName('CODSUBGRUPO').Value :=
+      zerarcodigo(dm.qrCommonWeb.FieldByName('CODSUBGRUPO').Value);
 
     dm.qrCommonLoc.ExecSQL;
     pb.Position:= pb.Position+1;
     dm.qrCommonWeb.Next;
   end;
 
-  log('produtos concluída');
+  log('produtos concluída : '+IntToStr(pb.Position));
 
 end;
 
@@ -145,6 +191,225 @@ end;
 
 
 
+
+procedure TSIncronizador.produtoSimilares;
+begin
+// with dm.qrCommonWeb do
+//  begin
+//    Close;
+//    sql.Clear;
+//    sql.Text:= 'delete from PUBLIC.produto_categoria';
+//    ExecSQL;
+//  end;
+//
+  with dm.qrCommonLoc do
+  begin
+    Close;
+    sql.Clear;
+    sql.Text:= 'delete from C000025';
+    ExecSQL;
+  end;
+
+log('produtos iniciadas');
+
+ with dm.qrCommonLoc do
+  begin
+    Close;
+    sql.Clear;
+    sql.Text:=
+    'INSERT INTO C000025 (CODIGO, PRODUTO, UNIDADE, REFERENCIA, CODBARRA, CODFORNECEDOR, PRECOCUSTO '+
+    '  ) '+
+    'VALUES (:CODIGO, :PRODUTO, :UNIDADE, :REFERENCIA, :CODBARRA, :CODFORNECEDOR, :PRECOCUSTO '+
+    '  )';
+
+  end;
+
+
+
+  with dm.qrCommonWeb do
+  begin
+      Close;
+      sql.Clear;
+      sql.Text :=
+      'SELECT TOP 10 [CODPROD], [DESCRICAO], [UNIDADE], [CODFAB],[CODBARRAS], [CODFOR], [CUSTO] '+
+      '  '+
+      ' FROM [hlpdados].[dbo].[produto]';
+    Open;
+    First;
+
+  end;
+
+  pb.Position:=0;
+  pb.Max:= dm.qrCommonWeb.RecordCount;
+
+  while not dm.qrCommonWeb.Eof do
+  begin
+
+//    ShowMessage(dm.qrCommonLoc.FieldByName('PRODUTO').Value);
+
+    dm.qrCommonLoc.ParamByName('CODIGO').Value :=
+      zerarcodigo(dm.qrCommonWeb.FieldByName('CODPROD').Value);
+//      ShowMessage( zerarcodigo(dm.qrCommonWeb.FieldByName('ID').Value));
+
+   dm.qrCommonLoc.ParamByName('PRODUTO').Value :=
+      (dm.qrCommonWeb.FieldByName('DESCRICAO').Value);
+
+   dm.qrCommonLoc.ParamByName('UNIDADE').Value :=
+      (dm.qrCommonWeb.FieldByName('UNIDADE').Value);
+
+
+   dm.qrCommonLoc.ParamByName('REFERENCIA').Value :=
+      (dm.qrCommonWeb.FieldByName('CODFAB').Value);
+
+
+   dm.qrCommonLoc.ParamByName('CODBARRA').Value :=
+      (dm.qrCommonWeb.FieldByName('CODBARRAS').Value);
+
+
+   dm.qrCommonLoc.ParamByName('CODFORNECEDOR').Value :=
+      zerarcodigo(dm.qrCommonWeb.FieldByName('CODFOR').Value);
+
+
+   dm.qrCommonLoc.ParamByName('PRECOCUSTO').Value :=
+      (dm.qrCommonWeb.FieldByName('CUSTO').Value);
+
+//
+//   dm.qrCommonLoc.ParamByName('PRODUTO').Value :=
+//      (dm.qrCommonWeb.FieldByName('DESCRICAO').Value);
+//
+//
+//   dm.qrCommonLoc.ParamByName('PRODUTO').Value :=
+//      (dm.qrCommonWeb.FieldByName('DESCRICAO').Value);
+//
+//
+//   dm.qrCommonLoc.ParamByName('PRODUTO').Value :=
+//      (dm.qrCommonWeb.FieldByName('DESCRICAO').Value);
+//
+//
+//   dm.qrCommonLoc.ParamByName('PRODUTO').Value :=
+//      (dm.qrCommonWeb.FieldByName('DESCRICAO').Value);
+//
+//
+//   dm.qrCommonLoc.ParamByName('PRODUTO').Value :=
+//      (dm.qrCommonWeb.FieldByName('DESCRICAO').Value);
+
+
+
+
+
+    dm.qrCommonLoc.ExecSQL;
+    pb.Position:= pb.Position+1;
+    dm.qrCommonWeb.Next;
+  end;
+
+  log('produtos concluída');
+
+end;
+procedure TSIncronizador.Button4Click(Sender: TObject);
+begin
+clientes;
+end;
+
+procedure TSIncronizador.clientes;
+begin
+ with dm.qrCommonLoc do
+  begin
+    Close;
+    sql.Clear;
+    sql.Text:= 'delete from C000007';
+    ExecSQL;
+  end;
+
+log('clientes iniciados');
+
+ with dm.qrCommonLoc do
+  begin
+    Close;
+    sql.Clear;
+    sql.Text:=
+    'INSERT INTO C000007 (CODIGO  '+
+    '   ) '+
+    'VALUES (:CODIGO  '+
+    ' )';
+
+  end;
+
+
+
+  with dm.qrCommonWeb do
+  begin
+      Close;
+      sql.Clear;
+      sql.Text :=
+      'SELECT TOP 20 * '+
+      '  '+
+      ' FROM [hlpdados].[dbo].[cliente]';
+    Open;
+    First;
+
+  end;
+
+  pb.Position:=0;
+  pb.Max:= dm.qrCommonWeb.RecordCount;
+
+  while not dm.qrCommonWeb.Eof do
+  begin
+
+//    ShowMessage(dm.qrCommonLoc.FieldByName('PRODUTO').Value);
+
+    dm.qrCommonLoc.ParamByName('CODIGO').Value :=
+      zerarcodigo(dm.qrCommonWeb.FieldByName('CodCli').Value);
+//      ShowMessage( zerarcodigo(dm.qrCommonWeb.FieldByName('ID').Value));
+
+
+
+
+//   dm.qrCommonLoc.ParamByName('REFERENCIA').Value :=
+//      (dm.qrCommonWeb.FieldByName('CODFAB').Value);
+
+
+//   dm.qrCommonLoc.ParamByName('CODBARRA').Value :=
+//      (dm.qrCommonWeb.FieldByName('CODBARRAS').Value);
+//
+//
+//   dm.qrCommonLoc.ParamByName('CODFORNECEDOR').Value :=
+//      zerarcodigo(dm.qrCommonWeb.FieldByName('CODFOR').Value);
+//
+//
+//   dm.qrCommonLoc.ParamByName('PRECOCUSTO').Value :=
+//      (dm.qrCommonWeb.FieldByName('CUSTO').Value);
+//
+//
+//   dm.qrCommonLoc.ParamByName('CLASSIFICACAO_FISCAL').Value :=
+//      (dm.qrCommonWeb.FieldByName('CODPRODCLASSIFICACAO').Value);
+//
+//
+//   dm.qrCommonLoc.ParamByName('CEST').Value :=
+//      (dm.qrCommonWeb.FieldByName('CEST').Value);
+//
+//
+//   dm.qrCommonLoc.ParamByName('CODIGO_ANP').Value :=
+//      (dm.qrCommonWeb.FieldByName('CODANP').Value);
+////
+//
+//   dm.qrCommonLoc.ParamByName('CODMARCA').Value :=
+//      zerarcodigo(dm.qrCommonWeb.FieldByName('CODFABI').Value);
+//
+//
+//   dm.qrCommonLoc.ParamByName('CODGRUPO').Value :=
+//      zerarcodigo(dm.qrCommonWeb.FieldByName('CODGRUPO').Value);
+//
+////
+//   dm.qrCommonLoc.ParamByName('CODSUBGRUPO').Value :=
+//      zerarcodigo(dm.qrCommonWeb.FieldByName('CODSUBGRUPO').Value);
+
+    dm.qrCommonLoc.ExecSQL;
+    pb.Position:= pb.Position+1;
+    dm.qrCommonWeb.Next;
+  end;
+
+  log(IntToStr(pb.Position)+' Clientes migrados');
+end;
 
 procedure TSIncronizador.FormClose(Sender: TObject; var Action: TCloseAction);
 begin

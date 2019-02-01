@@ -56,19 +56,9 @@ with connWeb do begin
 //  Open;
 end;
 
-//    Add('DriverID=MSSQL');
-//    Add('Server=127.0.0.1');
-//    Add('port=1433');
-//    Add('Database=hlpdados');
-//    Add('User_Name=LEANDRO');
-////    Add('MetaDefSchema=dbo');
-////    Add('User_Name=sa');
-////    Add('MetaDefCatalog=dbo');
-////    Add('Password=8895');
-//    Add('OSAuthent=Yes');
-//    Add('MARS=YES');
 
-if connWeb.Connected then ShowMessage('conectatado') else ShowMessage('desconectatado');
+
+//if connWeb.Connected then ShowMessage('conectatado') else ShowMessage('desconectatado');
 
 //#### local
 with connLocal do begin

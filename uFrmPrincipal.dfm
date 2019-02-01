@@ -1,7 +1,7 @@
 object SIncronizador: TSIncronizador
   Left = 0
   Top = 0
-  Caption = 'Sincronizador'
+  Caption = 'Migrador Empari -> Atron'
   ClientHeight = 408
   ClientWidth = 1008
   Color = clBtnFace
@@ -88,6 +88,7 @@ object SIncronizador: TSIncronizador
       Height = 25
       Caption = 'Clientes'
       TabOrder = 1
+      OnClick = Button4Click
     end
     object Button5: TButton
       Left = 808
@@ -114,6 +115,7 @@ object SIncronizador: TSIncronizador
       Height = 25
       Caption = 'receber pedido'
       TabOrder = 4
+      Visible = False
     end
   end
   object Panel2: TPanel
