@@ -51,6 +51,7 @@ type
     procedure grupos;
     procedure sequencia(tabela : string);
     procedure enderecoClick(Sender: TObject);
+    function FormataCNPJ(CNPJ: string): string;
 
 
 
@@ -637,7 +638,7 @@ end;
 procedure TSIncronizador.Button4Click(Sender: TObject);
 begin
 clientes;
-fornececores;
+//fornececores;
 end;
 
 procedure TSIncronizador.clientes;
@@ -717,7 +718,7 @@ log('clientes iniciados');
 //
 //
    dm.qrCommonLoc.ParamByName('CPF').Value :=
-      (dm.qrCommonWeb.FieldByName('CNPJCPF').Value);
+      FormataCNPJ(dm.qrCommonWeb.FieldByName('CNPJCPF').Value);
 //
 //
    dm.qrCommonLoc.ParamByName('RG').Value :=
@@ -961,6 +962,16 @@ log('estoque iniciadas');
   log('estoque concluída');
 end;
 
+function TSIncronizador.FormataCNPJ(CNPJ: string): string;
+begin
+if Length(CNPJ)> 11
+then
+  Result := Copy(CNPJ,1,2)+'.'+Copy(CNPJ,3,3)+'.'+Copy(CNPJ,6,3)+'/'+Copy(CNPJ,9,4)+'-'+Copy(CNPJ,13,2)
+else
+  Result := Copy(CNPJ,1,3)+'.'+Copy(CNPJ,3,3)+'.'+Copy(CNPJ,6,3)+'-'+Copy(CNPJ,9,2);
+
+end;
+
 procedure TSIncronizador.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
 Application.Terminate;
@@ -973,7 +984,7 @@ end;
 procedure TSIncronizador.FormCreate(Sender: TObject);
 begin
 //sicReceber:= 0;
-versao:= '1.04';
+versao:= '1.05';
 Caption:= Caption+' - Versão: '+versao;
 end;
 
@@ -1066,7 +1077,7 @@ log('fornecedores iniciadas');
       (dm.qrCommonWeb.FieldByName('Telefone').Value);
 
     dm.qrCommonLoc.ParamByName('CNPJ').Value :=
-      (dm.qrCommonWeb.FieldByName('CNPJCPF').Value);
+      FormataCNPJ(dm.qrCommonWeb.FieldByName('CNPJCPF').Value);
 
     dm.qrCommonLoc.ParamByName('IE').Value :=
       (dm.qrCommonWeb.FieldByName('IERG').Value);
