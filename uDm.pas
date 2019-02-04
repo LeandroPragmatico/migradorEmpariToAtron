@@ -13,7 +13,6 @@ uses
 
 type
   Tdm = class(TDataModule)
-    connWeb_OLD: TFDConnection;
     connLocal: TFDConnection;
     qrCommonWeb: TFDQuery;
     qrCommonLoc: TFDQuery;
@@ -30,6 +29,8 @@ var
   dm: Tdm;
 
 implementation
+  uses
+  IniFiles, Vcl.Forms;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -37,8 +38,12 @@ implementation
 
 
 procedure Tdm.DataModuleCreate(Sender: TObject);
+var
+  ArquivoINI: TIniFile;
 begin
+ArquivoINI := TIniFile.Create(ExtractFileDir(Application.ExeName)+'\db.ini');
 
+//ShowMessage(ExtractFileDir(Application.ExeName));
 with connWeb do begin
   Close;
   DriverName:='MSSQL';
@@ -49,7 +54,7 @@ with connWeb do begin
       Add('User_Name=sa');
       Add('Database=hlpdados');
       Add('port=1433');
-      Add('Password=8895');
+      Add('Password='+ArquivoINI.ReadString('Banco de Dados', 'senha',''));
     end;
 
   Connected:=True;
@@ -58,7 +63,7 @@ end;
 
 
 
-//if connWeb.Connected then ShowMessage('conectatado') else ShowMessage('desconectatado');
+if connWeb.Connected then ShowMessage('conectatado no Banco Empari') else ShowMessage('desconectatado');
 
 //#### local
 with connLocal do begin

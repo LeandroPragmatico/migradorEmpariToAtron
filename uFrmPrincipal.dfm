@@ -107,15 +107,15 @@ object SIncronizador: TSIncronizador
       Caption = 'test'
       TabOrder = 3
       Visible = False
+      OnClick = enderecoClick
     end
     object Button1: TButton
       Left = 262
       Top = 10
       Width = 100
       Height = 25
-      Caption = 'estoque'
+      Caption = 'Fornecedores'
       TabOrder = 4
-      Visible = False
       OnClick = Button1Click
     end
   end

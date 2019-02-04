@@ -3,13 +3,6 @@ object dm: Tdm
   OnCreate = DataModuleCreate
   Height = 217
   Width = 348
-  object connWeb_OLD: TFDConnection
-    Params.Strings = (
-      'ConnectionDef=empari')
-    LoginPrompt = False
-    Left = 68
-    Top = 25
-  end
   object connLocal: TFDConnection
     Params.Strings = (
       'Database=C:\Atron\GESTOR\BD\BASE.FDB'
@@ -22,7 +15,7 @@ object dm: Tdm
     Top = 24
   end
   object qrCommonWeb: TFDQuery
-    Connection = connWeb_OLD
+    Connection = connWeb
     FetchOptions.AssignedValues = [evRecordCountMode]
     FetchOptions.RecordCountMode = cmTotal
     SQL.Strings = (
@@ -58,7 +51,7 @@ object dm: Tdm
       'MetaDefCatalog=dbo'
       'MetaDefSchema=dbo')
     LoginPrompt = False
-    Left = 253
-    Top = 21
+    Left = 69
+    Top = 29
   end
 end
